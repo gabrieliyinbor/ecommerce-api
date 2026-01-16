@@ -3,10 +3,18 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express();
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI)
+.then(() => console.log('MongoDB Connected'))
+.catch(err => console.log(err));// Connect to MongoDB
+
 
 // Middleware (The Gatekeeper)
 // This allows your app to understand JSON data sent in requests
 app.use(express.json()); 
+
+const productRoutes = require('./routes/productRoutes');
+app.use('/api/products', productRoutes);
 
 // Basic Route (To test if it works)
 app.get('/', (req, res) => {

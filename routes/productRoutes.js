@@ -3,16 +3,18 @@ const router = express.Router();
 const { 
     createProduct, 
     getProducts, 
-    getProductById // <--- Import the new function
+    getProductById,
+    updateProduct,
+    deleteProduct // <--- Import this
 } = require('../controllers/productController');
 
-// Route for /api/products
 router.route('/')
     .get(getProducts)
     .post(createProduct);
 
-// Route for /api/products/:id  (The :id is a variable)
 router.route('/:id')
-    .get(getProductById);
+    .get(getProductById)
+    .put(updateProduct)
+    .delete(deleteProduct); // <--- Add this line
 
 module.exports = router;

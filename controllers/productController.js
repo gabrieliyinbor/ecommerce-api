@@ -29,23 +29,38 @@ exports.createProduct = async (req, res) => {
     }
 };
 
-// @desc    Fetch all products (with optional search)
-// @route   GET /api/products?keyword=...
+// @desc    Fetch all products (with search & pagination)
+// @route   GET /api/products?keyword=...&pageNumber=1
 // @access  Public
 exports.getProducts = async (req, res) => {
     try {
-        // 1. Check if a 'keyword' was passed in the URL (e.g. ?keyword=iPhone)
+        // --- 1. Search Logic (Keep this) ---
         const keyword = req.query.keyword ? {
             name: {
-                $regex: req.query.keyword, // Matches partial strings (e.g. "phon" matches "iPhone")
-                $options: 'i'             // Case insensitive (e.g. "iphone" matches "iPhone")
+                $regex: req.query.keyword,
+                $options: 'i'
             }
         } : {};
 
-        // 2. Find products using that keyword (or find all if keyword is empty)
-        const products = await Product.find({ ...keyword });
+        // --- 2. Pagination Logic (NEW) ---
+        const pageSize = 2; // How many items per page (keep it small to test)
+        const page = Number(req.query.pageNumber) || 1; // Default to page 1
 
-        res.json(products);
+        // Count total items matching the keyword (so we know how many pages total)
+        const count = await Product.countDocuments({ ...keyword });
+
+        // Find products with Limit and Skip
+        const products = await Product.find({ ...keyword })
+            .limit(pageSize)
+            .skip(pageSize * (page - 1));
+
+        // --- 3. Send Response ---
+        res.json({ 
+            products, 
+            page, 
+            pages: Math.ceil(count / pageSize) 
+        });
+
     } catch (error) {
         res.status(500).json({ message: 'Server Error', error: error.message });
     }

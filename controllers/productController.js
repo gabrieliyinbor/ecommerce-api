@@ -29,15 +29,25 @@ exports.createProduct = async (req, res) => {
     }
 };
 
-// @desc    Get all products
-// @route   GET /api/products
+// @desc    Fetch all products (with optional search)
+// @route   GET /api/products?keyword=...
 // @access  Public
 exports.getProducts = async (req, res) => {
     try {
-        const products = await Product.find({}); // Empty brackets {} means "Find Everything"
-        res.status(200).json(products);
+        // 1. Check if a 'keyword' was passed in the URL (e.g. ?keyword=iPhone)
+        const keyword = req.query.keyword ? {
+            name: {
+                $regex: req.query.keyword, // Matches partial strings (e.g. "phon" matches "iPhone")
+                $options: 'i'             // Case insensitive (e.g. "iphone" matches "iPhone")
+            }
+        } : {};
+
+        // 2. Find products using that keyword (or find all if keyword is empty)
+        const products = await Product.find({ ...keyword });
+
+        res.json(products);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 

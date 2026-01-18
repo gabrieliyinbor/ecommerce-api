@@ -24,3 +24,47 @@ A robust RESTful API built with **Node.js**, **Express**, and **MongoDB**. This 
    git clone [https://github.com/gabrieliyinbor/ecommerce-api.git](https://github.com/gabrieliyinbor/ecommerce-api.git)
    cd ecommerce-api
 
+2. **Install dependencies**
+   ```bash
+   npm install
+
+3. **Environment Setup**
+   ```Code snippet
+   PORT=5000
+   MONGO_URI=your_mongodb_connection_string_here
+
+4. **Run the server**
+   ```bash
+   # Development mode (with nodemon)
+   npm run dev
+
+   # Production mode
+   npm start
+
+## 📡 API Endpoints
+
+### Products
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/products` | Fetch all products (includes pagination) |
+| `GET` | `/api/products?keyword=iphone` | Search products by name |
+| `GET` | `/api/products?pageNumber=2` | Fetch specific page of products |
+| `GET` | `/api/products/:id` | Fetch single product details |
+| `POST` | `/api/products` | Create a new product |
+| `PUT` | `/api/products/:id` | Update product details |
+| `DELETE` | `/api/products/:id` | Remove a product |
+
+## 🧪 Example Request (Search)
+
+**GET** `/api/products?keyword=camera`
+
+```json
+[
+  {
+    "_id": "64f1a2b...",
+    "name": "Sony Alpha Camera",
+    "price": 1200,
+    "category": "Electronics"
+  }
+]

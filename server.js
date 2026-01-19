@@ -16,6 +16,9 @@ app.use(express.json());
 const productRoutes = require('./routes/productRoutes');
 app.use('/api/products', productRoutes);
 
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/users', userRoutes);
+
 // Basic Route (To test if it works)
 app.get('/', (req, res) => {
     res.send('E-Commerce API is running...');
